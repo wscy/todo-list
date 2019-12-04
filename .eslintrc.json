@@ -7,14 +7,18 @@
     },
     "extends": [
         "plugin:react/recommended",
-        "airbnb"
+        "airbnb",
+        "plugin:flowtype/recommended",
+        "plugin:jest/recommended",
+        "plugin:jsx-a11y/recommended",
+        "plugin:prettier/recommended"
     ],
     
     "globals": {
         "Atomics": "readonly",
         "SharedArrayBuffer": "readonly"
     },
-    "parser": "@typescript-eslint/parser",
+    "parser": "babel-eslint",
     "parserOptions": {
         "ecmaFeatures": {
             "jsx": true
@@ -22,12 +26,22 @@
         "ecmaVersion": 2018
     },
     "plugins": [
-        "react",
-        "@typescript-eslint"
+        "flowtype",
+        "import",
+        "jest",
+        "json",
+        "jsx-a11y",
+        "prettier",
+        "react"
     ],
 
     
     "rules": {
-        "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }]
+        "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+        "linebreak-style": [0, "error", "windows"],
+        "import/prefer-default-export": "off",
+        "no-unused-expressions": ["error", {"allowTaggedTemplates": true}]
+        // "prettier.semi": false
+        // "prettier/prettier": "error"
     }
 }
