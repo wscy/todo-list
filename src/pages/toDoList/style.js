@@ -34,5 +34,6 @@ export const AddMission = styled.div`
   padding: 0 50px;
   display: flex;
   justify-content: center;
-  background-color: darkgray;
+  border: 1px solid blue;
+  background-color: green;
 `;

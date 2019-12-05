@@ -11,9 +11,10 @@ import {
   Incomplete,
   AddMission
 } from "./style";
-import MissionDetailModal from "../../components/missionDetailModal";
-import EditableTable from "../../components/editableTable";
-import StaticTable from "../../components/staticTable";
+/* import MissionDetailModal from "../../components/missionDetailModal";
+ */
+import EditableTable from "../../components/incomplateTable";
+import StaticTable from "../../components/complatedTable";
 
 const { Header, Content } = Layout;
 class ToDoList extends Component {
@@ -28,10 +29,10 @@ class ToDoList extends Component {
           title: "起床",
           date: "2019-12-09",
           steps: [
-            { content: "睁眼", isComplated: true },
-            { content: "打开被子", isComplated: true },
-            { content: "穿衣服", isComplated: true },
-            { content: "下床", isComplated: true }
+            { key: 0, content: "睁眼", isComplated: true },
+            { key: 1, content: "打开被子", isComplated: true },
+            { key: 2, content: "穿衣服", isComplated: true },
+            { key: 3, content: "下床", isComplated: true }
           ],
           isComplated: true
         },
@@ -39,11 +40,11 @@ class ToDoList extends Component {
           key: 1,
           title: "上班",
           date: "2019-12-09",
-          step: [
-            { content: "出门", isComplated: true },
-            { content: "赶公交", isComplated: true },
-            { content: "进公司", isComplated: true },
-            { content: "打卡", isComplated: true }
+          steps: [
+            { key: 0, content: "出门", isComplated: true },
+            { key: 1, content: "赶公交", isComplated: true },
+            { key: 2, content: "进公司", isComplated: true },
+            { key: 3, content: "打卡", isComplated: true }
           ],
           isComplated: true
         },
@@ -51,42 +52,57 @@ class ToDoList extends Component {
           key: 2,
           title: "回复老大邮件",
           date: "2019-12-09",
-          step: [],
+          steps: [],
           isComplated: false
         },
         {
           key: 3,
           title: "看书",
           date: "2019-12-10",
-          steps: [{ content: "打卡", isComplated: false }],
+          steps: [{ key: 0, content: "打卡", isComplated: false }],
           isComplated: false
         },
         {
           key: 4,
           title: "打球",
           date: "2019-12-10",
-          step: [{ content: "去打球叫上朋友", isComplated: false }],
+          steps: [{ key: 0, content: "去打球叫上朋友", isComplated: false }],
           isComplated: false
         },
         {
           key: 5,
           title: "回复组员邮件",
           date: "2019-12-10",
-          step: [],
+          steps: [],
           isComplated: false
         }
       ]
     };
   }
 
-  updateModalShow = isShow => {
+  /*  updateModalShow = isShow => {
     this.setState({ isModalShow: isShow });
-  };
+  }; */
 
   renderCurrentTime = () => String(moment().format("YYYY-M-D"));
 
-  selectDate = (date, dateString) => {
-    console.log(dateString);
+  selectDate = (date, dateString) => {};
+
+  updateMissionComplated = key => {
+    let { missionList } = this.state;
+    missionList = missionList.map(value => {
+      let result;
+      if (value.key === key) {
+        result = {
+          ...value,
+          isComplated: true
+        };
+      } else {
+        result = value;
+      }
+      return result;
+    });
+    this.setState({ missionList });
   };
 
   addNewMission = () => {
@@ -96,7 +112,7 @@ class ToDoList extends Component {
       key: count + 1,
       title: textValue,
       date: this.renderCurrentTime(),
-      step: [],
+      steps: [],
       isComplated: false
     };
     missionList.push(newMission);
@@ -114,7 +130,7 @@ class ToDoList extends Component {
       );
     } else {
       result = (
-        <Button shape="circle" ghost disabled>
+        <Button shape="circle" type="dashed" disabled>
           <Icon type="plus" />
         </Button>
       );
@@ -124,7 +140,6 @@ class ToDoList extends Component {
 
   render() {
     const { isModalShow, missionList, textValue } = this.state;
-    console.log("missionList->", missionList, missionList.length);
 
     const incompleteMissions = [];
     const completedMissions = [];
@@ -135,16 +150,7 @@ class ToDoList extends Component {
         incompleteMissions.push(value);
       }
     });
-    console.log(
-      "incompleteMissions->",
-      incompleteMissions,
-      incompleteMissions.length
-    );
-    console.log(
-      "completedMissions->",
-      completedMissions,
-      completedMissions.length
-    );
+
     return (
       <Container>
         <Layout>
@@ -160,6 +166,7 @@ class ToDoList extends Component {
                 updateModalShow={this.updateModalShow}
                 dataSource={incompleteMissions}
                 count={incompleteMissions.length}
+                updateMissionComplated={this.updateMissionComplated}
               />
             </Complated>
             <Incomplete>
@@ -180,10 +187,10 @@ class ToDoList extends Component {
             </AddMission>
           </Content>
         </Layout>
-        <MissionDetailModal
+        {/*    <MissionDetailModal
           isShow={isModalShow}
           updateModalShow={this.updateModalShow}
-        />
+        /> */}
       </Container>
     );
   }

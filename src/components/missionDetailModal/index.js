@@ -3,28 +3,23 @@ import PropTypes from "prop-types";
 import "antd/dist/antd.css";
 import { Layout, DatePicker, Table, Input, Button, Modal } from "antd";
 import {} from "./style";
-import DetailTable from "./detailTable";
+import ComplatedDetail from "../complatedTable/complatedDetail";
 
 const { Header, Content } = Layout;
 
 const MissionDetailModal = props => {
-  const { isShow, updateModalShow } = props;
-
+  const { isShow, closeModal, selectedMissionDetail } = props;
   return (
-    <Modal
-      visible={isShow}
-      onCancel={() => updateModalShow(false)}
-      onOk={() => updateModalShow(false)}
-      title="hhhh"
-    >
-      <DetailTable />
+    <Modal visible={isShow} onCancel={closeModal} onOk={closeModal}>
+      <ComplatedDetail selectedMissionDetail={selectedMissionDetail} />
     </Modal>
   );
 };
 
 MissionDetailModal.propTypes = {
   isShow: PropTypes.bool.isRequired,
-  updateModalShow: PropTypes.func.isRequired
+  closeModal: PropTypes.func.isRequired,
+  selectedMissionDetail: PropTypes.arrayOf.isRequired
 };
 
 export default MissionDetailModal;

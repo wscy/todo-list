@@ -4,6 +4,7 @@ import "antd/dist/antd.css";
 import "./style.css";
 import { Table, Input, Button, Popconfirm, Form } from "antd";
 import PropTypes, { bool } from "prop-types";
+import MissionDetailModal from "../missionDetailModal";
 
 const EditableContext = React.createContext();
 
@@ -99,10 +100,16 @@ class EditableCell extends React.Component {
 class EditableTable extends React.Component {
   constructor(props) {
     super(props);
-    const { updateModalShow, dataSource, count } = props;
+    const {
+      updateModalShow,
+      dataSource,
+      count,
+      updateMissionComplated
+    } = props;
     this.state = {
       dataSource,
-      count
+      count,
+      isModalShow: false
     };
 
     this.columns = [
@@ -129,16 +136,9 @@ class EditableTable extends React.Component {
           ) : null
       }
     ];
-
-    console.log("state---->", this.state);
   }
 
-  handleDelete = key => {
-    const dataSource = [...this.state.dataSource];
-    this.setState({ dataSource: dataSource.filter(item => item.key !== key) });
-  };
-
-  handleAdd = () => {
+  /*  handleAdd = () => {
     const { count, dataSource } = this.state;
     const newData = {
       key: count,
@@ -150,6 +150,20 @@ class EditableTable extends React.Component {
       dataSource: [...dataSource, newData],
       count: count + 1
     });
+  }; */
+
+  componentWillReceiveProps(nextProps) {
+    this.state.dataSource = nextProps.dataSource;
+  }
+
+  updateModalShow = isShow => {
+    this.setState({ isModalShow: isShow });
+  };
+
+  handleDelete = key => {
+    this.props.updateMissionComplated(key);
+    const dataSource = [...this.state.dataSource];
+    this.setState({ dataSource: dataSource.filter(item => item.key !== key) });
   };
 
   handleSave = row => {
@@ -163,13 +177,8 @@ class EditableTable extends React.Component {
     this.setState({ dataSource: newData });
   };
 
-  componentWillReceiveProps(nextProps) {
-    this.state.dataSource = nextProps.dataSource;
-  }
-
   render() {
-    const { dataSource } = this.state;
-    console.log("EditableTable--------->", dataSource, dataSource.length);
+    const { dataSource, isModalShow } = this.state;
     const components = {
       body: {
         row: EditableFormRow,
@@ -193,13 +202,13 @@ class EditableTable extends React.Component {
     });
     return (
       <div>
-        <Button
+        {/* <Button
           onClick={this.handleAdd}
           type="primary"
           style={{ marginBottom: 16 }}
         >
           Add a row
-        </Button>
+        </Button> */}
         <Table
           components={components}
           rowClassName={() => "editable-row"}
@@ -208,6 +217,10 @@ class EditableTable extends React.Component {
           columns={columns}
           pagination={false}
         />
+        <MissionDetailModal
+          isShow={isModalShow}
+          updateModalShow={this.updateModalShow}
+        />
       </div>
     );
   }
@@ -215,6 +228,7 @@ class EditableTable extends React.Component {
 EditableTable.propTypes = {
   updateModalShow: PropTypes.func.isRequired,
   dataSource: PropTypes.arrayOf.isRequired,
-  count: PropTypes.number.isRequired
+  count: PropTypes.number.isRequired,
+  updateMissionComplated: PropTypes.func.isRequired
 };
 export default EditableTable;
