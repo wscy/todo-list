@@ -5,11 +5,12 @@ export const Container = styled.div`
     height: 100%;
   }
   .ant-layout-header {
-    height: 20%;
+    height: 10%;
     display: flex;
     justify-content: space-between;
     background-color: white;
     border-width: 2px;
+    background-color: greenyellow;
   }
   .ant-layout-content {
     display: flex;
@@ -31,6 +32,7 @@ export const Incomplete = styled.div`
 `;
 export const AddMission = styled.div`
   padding: 0 50px;
-  flex: 1;
-  display: inline;
+  display: flex;
+  justify-content: center;
+  background-color: darkgray;
 `;
