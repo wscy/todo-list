@@ -12,6 +12,7 @@ class StaticTable extends Component {
     dataSource = dataSource.map(value => ({ ...value, item: value }));
     this.columns = [
       {
+        title: "已完成事项",
         dataIndex: "title",
         width: "80%",
         render: text => <a>{text}</a>

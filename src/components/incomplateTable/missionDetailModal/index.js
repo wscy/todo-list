@@ -11,8 +11,11 @@ const MissionDetailModal = props => {
   const {
     isShow,
     closeModal,
-    selectedMissionDetails: { title, steps }
+    saveModal,
+    saveDetailEdit,
+    selectedMissionDetails
   } = props;
+  const { title, steps } = selectedMissionDetails;
   return (
     <Modal
       visible={isShow}
@@ -20,7 +23,10 @@ const MissionDetailModal = props => {
       onOk={closeModal}
       title={title}
     >
-      <DetailTable selectedMissionDetails={steps} />
+      <DetailTable
+        selectedMissionDetails={selectedMissionDetails}
+        saveDetailEdit={saveDetailEdit}
+      />
     </Modal>
   );
 };
@@ -28,6 +34,8 @@ const MissionDetailModal = props => {
 MissionDetailModal.propTypes = {
   isShow: PropTypes.bool.isRequired,
   closeModal: PropTypes.func.isRequired,
+  saveModal: PropTypes.func.isRequired,
+  saveDetailEdit: PropTypes.func.isRequired,
   selectedMissionDetails: PropTypes.arrayOf.isRequired,
   title: PropTypes.string.isRequired,
   steps: PropTypes.arrayOf.isRequired

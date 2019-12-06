@@ -99,10 +99,12 @@ class EditableCell extends React.Component {
 class DetailTable extends React.Component {
   constructor(props) {
     super(props);
-    const { closeModal, selectedMissionDetails } = props;
+    const { closeModal, selectedMissionDetails, saveDetailEdit } = props;
+    const { steps } = selectedMissionDetails;
     this.state = {
-      dataSource: selectedMissionDetails,
-      count: selectedMissionDetails.length
+      dataSource: steps,
+      count: selectedMissionDetails.length,
+      saveDetailEdit
     };
     this.columns = [
       {
@@ -128,8 +130,19 @@ class DetailTable extends React.Component {
     ];
   }
 
+  componentWillReceiveProps(nextProps) {
+    const { selectedMissionDetails } = nextProps;
+    const { steps } = selectedMissionDetails;
+    const dataSource = steps.map(value => ({
+      ...value,
+      item: value
+    }));
+    this.state.dataSource = dataSource;
+  }
+
   handleDelete = record => {
     const { key, isComplated } = record;
+    const { saveDetailEdit } = this.state;
     let { dataSource } = this.state;
     dataSource = dataSource.map(value => {
       let result;
@@ -144,6 +157,7 @@ class DetailTable extends React.Component {
       return result;
     });
     /* this.setState({ dataSource: dataSource.filter(item => item.key !== key) }); */
+    saveDetailEdit(dataSource);
     this.setState({ dataSource });
   };
 
@@ -158,10 +172,13 @@ class DetailTable extends React.Component {
       dataSource: [...dataSource, newData],
       count: count + 1
     });
+    const { saveDetailEdit } = this.state;
+    saveDetailEdit(this.state.dataSource);
   };
 
   handleSave = row => {
-    const newData = [...this.state.dataSource];
+    const { dataSource } = this.state;
+    const newData = [...dataSource];
     const index = newData.findIndex(item => row.key === item.key);
     const item = newData[index];
     newData.splice(index, 1, {
@@ -169,10 +186,11 @@ class DetailTable extends React.Component {
       ...row
     });
     this.setState({ dataSource: newData });
+    const { saveDetailEdit } = this.state;
+    saveDetailEdit(newData);
   };
 
   render() {
-    console.log("------------>", this.state);
     const { dataSource } = this.state;
     const components = {
       body: {
@@ -219,6 +237,7 @@ class DetailTable extends React.Component {
 }
 DetailTable.propTypes = {
   closeModal: PropTypes.func.isRequired,
+  saveDetailEdit: PropTypes.func.isRequired,
   selectedMissionDetails: PropTypes.arrayOf.isRequired
 };
 export default DetailTable;

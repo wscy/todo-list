@@ -100,14 +100,15 @@ class EditableCell extends React.Component {
 class EditableTable extends React.Component {
   constructor(props) {
     super(props);
-    const { count } = props;
+    const { count, updateChangedDetailList } = props;
     let { dataSource } = props;
     dataSource = dataSource.map(value => ({ ...value, item: value }));
     this.state = {
       dataSource,
       count,
       isModalShow: false,
-      selectedMissionDetails: {}
+      selectedMissionDetails: {},
+      updateChangedDetailList
     };
 
     this.columns = [
@@ -126,9 +127,9 @@ class EditableTable extends React.Component {
               &nbsp;&nbsp;&nbsp;&nbsp;
               <Popconfirm
                 title="确定是已完成?"
-                onConfirm={() => this.handleDelete(record.key)}
+                onConfirm={() => this.handleDelete(record)}
               >
-                <a>已完成</a>
+                <a>完成</a>
               </Popconfirm>
             </>
           ) : null
@@ -150,10 +151,14 @@ class EditableTable extends React.Component {
     this.setState({ isModalShow: false });
   };
 
-  handleDelete = key => {
-    this.props.updateMissionComplated(key);
+  handleDelete = record => {
+    this.props.updateChangedDetailList(record);
+    this.props.updateMissionComplated(record.key);
+
     const dataSource = [...this.state.dataSource];
-    this.setState({ dataSource: dataSource.filter(item => item.key !== key) });
+    this.setState({
+      dataSource: dataSource.filter(item => item.key !== record.key)
+    });
   };
 
   handleSave = row => {
@@ -165,6 +170,26 @@ class EditableTable extends React.Component {
       ...row
     });
     this.setState({ dataSource: newData });
+  };
+
+  saveDetailEdit = updatedSteps => {
+    console.log("saveDetailEdit--->", updatedSteps);
+    let { dataSource, selectedMissionDetails } = this.state;
+    delete selectedMissionDetails.item;
+    selectedMissionDetails = {
+      ...selectedMissionDetails,
+      steps: updatedSteps
+    };
+    dataSource = dataSource.map(value => {
+      let result;
+      if (value.key === selectedMissionDetails.key) {
+        result = selectedMissionDetails;
+      } else {
+        result = value;
+      }
+      return result;
+    });
+    this.setState({ dataSource });
   };
 
   render() {
@@ -204,6 +229,7 @@ class EditableTable extends React.Component {
           isShow={isModalShow}
           closeModal={this.closeModal}
           selectedMissionDetails={selectedMissionDetails}
+          saveDetailEdit={this.saveDetailEdit}
         />
       </div>
     );

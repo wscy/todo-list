@@ -23,11 +23,12 @@ class ToDoList extends Component {
     this.state = {
       isModalShow: false,
       textValue: "",
+      selectedDate: this.renderCurrentTime(),
       missionList: [
         {
           key: 0,
           title: "起床",
-          date: "2019-12-09",
+          date: "2019-12-06",
           steps: [
             { key: 0, content: "睁眼", isComplated: true },
             { key: 1, content: "打开被子", isComplated: true },
@@ -51,7 +52,7 @@ class ToDoList extends Component {
         {
           key: 2,
           title: "回复老大邮件",
-          date: "2019-12-09",
+          date: "2019-12-06",
           steps: [
             { key: 0, content: "抄送给产品", isComplated: false },
             { key: 1, content: "把写的文案发给他", isComplated: true }
@@ -83,13 +84,11 @@ class ToDoList extends Component {
     };
   }
 
-  /*  updateModalShow = isShow => {
-    this.setState({ isModalShow: isShow });
-  }; */
+  renderCurrentTime = () => String(moment().format("YYYY-M-DD"));
 
-  renderCurrentTime = () => String(moment().format("YYYY-M-D"));
-
-  selectDate = (date, dateString) => {};
+  selectDate = (date, dateString) => {
+    this.setState({ selectedDate: dateString });
+  };
 
   updateMissionComplated = key => {
     let { missionList } = this.state;
@@ -109,12 +108,12 @@ class ToDoList extends Component {
   };
 
   addNewMission = () => {
-    const { missionList, textValue } = this.state;
+    const { missionList, textValue, selectedDate } = this.state;
     const count = missionList[missionList.length - 1].key;
     const newMission = {
       key: count + 1,
       title: textValue,
-      date: this.renderCurrentTime(),
+      date: selectedDate,
       steps: [],
       isComplated: false
     };
@@ -141,16 +140,29 @@ class ToDoList extends Component {
     return result;
   };
 
-  render() {
-    const { isModalShow, missionList, textValue } = this.state;
+  updateChangedDetailList = newIncompleteItem => {
+    const { missionList, selectedDate } = this.state;
+    missionList.map((value, index) => {
+      if (value.date === selectedDate) {
+        if (value.key === newIncompleteItem.key) {
+          missionList[index] = newIncompleteItem;
+        }
+      }
+    });
+    this.setState({ missionList });
+  };
 
+  render() {
+    const { isModalShow, textValue, selectedDate, missionList } = this.state;
     const incompleteMissions = [];
     const completedMissions = [];
     missionList.map(value => {
-      if (value.isComplated) {
-        completedMissions.push(value);
-      } else {
-        incompleteMissions.push(value);
+      if (value.date === selectedDate) {
+        if (value.isComplated) {
+          completedMissions.push(value);
+        } else {
+          incompleteMissions.push(value);
+        }
       }
     });
 
@@ -158,8 +170,12 @@ class ToDoList extends Component {
       <Container>
         <Layout>
           <Header>
-            <CurrentTime>{this.renderCurrentTime()}</CurrentTime>
+            <CurrentTime>
+              今天是：
+              {this.renderCurrentTime()}
+            </CurrentTime>
             <DataPickerContainer>
+              请选择日期：
               <DatePicker onChange={this.selectDate} />
             </DataPickerContainer>
           </Header>
@@ -170,6 +186,7 @@ class ToDoList extends Component {
                 dataSource={incompleteMissions}
                 count={incompleteMissions.length}
                 updateMissionComplated={this.updateMissionComplated}
+                updateChangedDetailList={this.updateChangedDetailList}
               />
             </Complated>
             <Incomplete>

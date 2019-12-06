@@ -8,6 +8,7 @@ const ComplatedDetails = props => {
 
   const columns = [
     {
+      title: "已完成事项",
       dataIndex: "content",
       width: "80%"
     }
