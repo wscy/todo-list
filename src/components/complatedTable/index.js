@@ -37,7 +37,6 @@ class StaticTable extends Component {
   }
 
   openModal = record => {
-    console.log("openModal--->", record);
     this.setState({ isModalShow: true, selectedMissionDetails: record });
   };
 

@@ -17,6 +17,7 @@ import EditableTable from "../../components/incomplateTable";
 import StaticTable from "../../components/complatedTable";
 
 const { Header, Content } = Layout;
+const storage=window.localStorage;
 class ToDoList extends Component {
   constructor(props) {
     super(props);
@@ -24,7 +25,7 @@ class ToDoList extends Component {
       isModalShow: false,
       textValue: "",
       selectedDate: this.renderCurrentTime(),
-      missionList: [
+      missionList:storage.getItem("missionList")!==null?JSON.parse(storage.getItem("missionList")): [
         {
           key: 0,
           title: "起床",
@@ -81,6 +82,7 @@ class ToDoList extends Component {
           isComplated: false
         }
       ]
+
     };
   }
 
@@ -89,6 +91,23 @@ class ToDoList extends Component {
   selectDate = (date, dateString) => {
     this.setState({ selectedDate: dateString });
   };
+
+  updateMissionTitle=newMissionItem=>{
+    
+    delete newMissionItem.item
+    
+    let {missionList}=this.state
+    
+    missionList.map((value,index)=>{
+       
+      if(value.key===newMissionItem.key){
+        
+        missionList[index]=newMissionItem
+      }
+    })
+    
+    this.setState({missionList})
+  }
 
   updateMissionComplated = key => {
     let { missionList } = this.state;
@@ -151,9 +170,21 @@ class ToDoList extends Component {
     });
     this.setState({ missionList });
   };
+ /*  componentDidUpdate(){
+    let missionList
+    if(storage){
+      missionList=JSON.parse(storage.getItem("missionList"))
+    }
+    this.setState({missionList})
+  } */
 
   render() {
-    const { isModalShow, textValue, selectedDate, missionList } = this.state;
+
+    const { isModalShow, textValue, selectedDate } = this.state;
+    let{missionList}=this.state
+   
+    storage.setItem('missionList',JSON.stringify(missionList))
+    
     const incompleteMissions = [];
     const completedMissions = [];
     missionList.map(value => {
@@ -166,6 +197,9 @@ class ToDoList extends Component {
       }
     });
 
+    
+    
+
     return (
       <Container>
         <Layout>
@@ -176,7 +210,7 @@ class ToDoList extends Component {
             </CurrentTime>
             <DataPickerContainer>
               请选择日期：
-              <DatePicker onChange={this.selectDate} />
+              <DatePicker onChange={this.selectDate}allowClear={false} />
             </DataPickerContainer>
           </Header>
           <Content>
@@ -187,6 +221,7 @@ class ToDoList extends Component {
                 count={incompleteMissions.length}
                 updateMissionComplated={this.updateMissionComplated}
                 updateChangedDetailList={this.updateChangedDetailList}
+                updateMissionTitle={this.updateMissionTitle}
               />
             </Complated>
             <Incomplete>

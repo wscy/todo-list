@@ -100,7 +100,7 @@ class EditableCell extends React.Component {
 class EditableTable extends React.Component {
   constructor(props) {
     super(props);
-    const { count, updateChangedDetailList } = props;
+    const { count, updateChangedDetailList,updateMissionTitle } = props;
     let { dataSource } = props;
     dataSource = dataSource.map(value => ({ ...value, item: value }));
     this.state = {
@@ -108,7 +108,8 @@ class EditableTable extends React.Component {
       count,
       isModalShow: false,
       selectedMissionDetails: {},
-      updateChangedDetailList
+      updateChangedDetailList,
+      updateMissionTitle
     };
 
     this.columns = [
@@ -170,16 +171,18 @@ class EditableTable extends React.Component {
       ...row
     });
     this.setState({ dataSource: newData });
+    this.state.updateMissionTitle(row)
   };
 
   saveDetailEdit = updatedSteps => {
-    console.log("saveDetailEdit--->", updatedSteps);
     let { dataSource, selectedMissionDetails } = this.state;
     delete selectedMissionDetails.item;
+    
     selectedMissionDetails = {
       ...selectedMissionDetails,
       steps: updatedSteps
     };
+    this.props.updateChangedDetailList(selectedMissionDetails);
     dataSource = dataSource.map(value => {
       let result;
       if (value.key === selectedMissionDetails.key) {
