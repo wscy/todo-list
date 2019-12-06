@@ -3,13 +3,13 @@ import "antd/dist/antd.css";
 import PropTypes from "prop-types";
 import { Table, Divider, Tag } from "antd";
 import "./style.css";
-import MissionDetailModal from "../missionDetailModal";
+import MissionDetailModal from "./missionDetailModal";
 
 class StaticTable extends Component {
   constructor(props) {
     super(props);
-    const { dataSource, count } = props;
-    console.log("StaticTable-->", Object.prototype.toString.call(dataSource));
+    let { dataSource } = props;
+    dataSource = dataSource.map(value => ({ ...value, item: value }));
     this.columns = [
       {
         dataIndex: "title",
@@ -18,20 +18,26 @@ class StaticTable extends Component {
       },
       {
         //   title: "查看",
-        dataIndex: "steps",
+        dataIndex: "item",
         render: record => <a onClick={() => this.openModal(record)}>查看</a>
       }
     ];
-    this.state = { dataSource, isModalShow: false, selectedMissionDetail: [] };
+    this.state = {
+      dataSource,
+      isModalShow: false,
+      selectedMissionDetails: {}
+    };
   }
 
   componentWillReceiveProps(nextProps) {
-    const { dataSource } = nextProps;
+    let { dataSource } = nextProps;
+    dataSource = dataSource.map(value => ({ ...value, item: value }));
     this.state.dataSource = dataSource;
   }
 
   openModal = record => {
-    this.setState({ isModalShow: true, selectedMissionDetail: record });
+    console.log("openModal--->", record);
+    this.setState({ isModalShow: true, selectedMissionDetails: record });
   };
 
   closeModal = () => {
@@ -39,12 +45,8 @@ class StaticTable extends Component {
   };
 
   render() {
-    const {
-      dataSource,
-      isModalShow,
-      selectedMissionDetail,
-      closeModal
-    } = this.state;
+    const { dataSource, isModalShow, selectedMissionDetails } = this.state;
+
     return (
       <>
         <Table
@@ -55,7 +57,7 @@ class StaticTable extends Component {
         <MissionDetailModal
           isShow={isModalShow}
           closeModal={this.closeModal}
-          selectedMissionDetail={selectedMissionDetail}
+          selectedMissionDetails={selectedMissionDetails}
         />
       </>
     );

@@ -1,10 +1,10 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import "antd/dist/antd.css";
 import { Table, Divider, Tag } from "antd";
-import "./style.css";
 
-const ComplatedDetail = props => {
-  const { selectedMissionDetail } = props;
+const ComplatedDetails = props => {
+  const { selectedMissionDetails } = props;
 
   const columns = [
     {
@@ -12,14 +12,16 @@ const ComplatedDetail = props => {
       width: "80%"
     }
   ];
-
-  console.log("selectedMissionDetail-->", selectedMissionDetail);
   return (
     <Table
       columns={columns}
-      dataSource={selectedMissionDetail}
+      dataSource={selectedMissionDetails}
       pagination={false}
     />
   );
 };
-export default ComplatedDetail;
+
+ComplatedDetails.propTypes = {
+  selectedMissionDetails: PropTypes.arrayOf.isRequired
+};
+export default ComplatedDetails;

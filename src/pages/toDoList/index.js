@@ -52,7 +52,10 @@ class ToDoList extends Component {
           key: 2,
           title: "回复老大邮件",
           date: "2019-12-09",
-          steps: [],
+          steps: [
+            { key: 0, content: "抄送给产品", isComplated: false },
+            { key: 1, content: "把写的文案发给他", isComplated: true }
+          ],
           isComplated: false
         },
         {

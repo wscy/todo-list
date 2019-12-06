@@ -4,7 +4,7 @@ import "antd/dist/antd.css";
 import "./style.css";
 import { Table, Input, Button, Popconfirm, Form } from "antd";
 import PropTypes, { bool } from "prop-types";
-import MissionDetailModal from "../missionDetailModal";
+import MissionDetailModal from "./missionDetailModal";
 
 const EditableContext = React.createContext();
 
@@ -100,16 +100,14 @@ class EditableCell extends React.Component {
 class EditableTable extends React.Component {
   constructor(props) {
     super(props);
-    const {
-      updateModalShow,
-      dataSource,
-      count,
-      updateMissionComplated
-    } = props;
+    const { count } = props;
+    let { dataSource } = props;
+    dataSource = dataSource.map(value => ({ ...value, item: value }));
     this.state = {
       dataSource,
       count,
-      isModalShow: false
+      isModalShow: false,
+      selectedMissionDetails: {}
     };
 
     this.columns = [
@@ -120,11 +118,11 @@ class EditableTable extends React.Component {
         editable: true
       },
       {
-        dataIndex: "operation",
+        dataIndex: "item",
         render: (text, record) =>
           dataSource.length >= 1 ? (
             <>
-              <a onClick={() => updateModalShow(true)}>查看</a>
+              <a onClick={() => this.openModal(record)}>查看</a>
               &nbsp;&nbsp;&nbsp;&nbsp;
               <Popconfirm
                 title="确定是已完成?"
@@ -138,26 +136,18 @@ class EditableTable extends React.Component {
     ];
   }
 
-  /*  handleAdd = () => {
-    const { count, dataSource } = this.state;
-    const newData = {
-      key: count,
-      name: `Edward King ${count}`,
-      age: 32,
-      address: `London, Park Lane no. ${count}`
-    };
-    this.setState({
-      dataSource: [...dataSource, newData],
-      count: count + 1
-    });
-  }; */
-
   componentWillReceiveProps(nextProps) {
-    this.state.dataSource = nextProps.dataSource;
+    let { dataSource } = nextProps;
+    dataSource = dataSource.map(value => ({ ...value, item: value }));
+    this.state.dataSource = dataSource;
   }
 
-  updateModalShow = isShow => {
-    this.setState({ isModalShow: isShow });
+  openModal = record => {
+    this.setState({ isModalShow: true, selectedMissionDetails: record });
+  };
+
+  closeModal = () => {
+    this.setState({ isModalShow: false });
   };
 
   handleDelete = key => {
@@ -178,7 +168,7 @@ class EditableTable extends React.Component {
   };
 
   render() {
-    const { dataSource, isModalShow } = this.state;
+    const { dataSource, isModalShow, selectedMissionDetails } = this.state;
     const components = {
       body: {
         row: EditableFormRow,
@@ -202,13 +192,6 @@ class EditableTable extends React.Component {
     });
     return (
       <div>
-        {/* <Button
-          onClick={this.handleAdd}
-          type="primary"
-          style={{ marginBottom: 16 }}
-        >
-          Add a row
-        </Button> */}
         <Table
           components={components}
           rowClassName={() => "editable-row"}
@@ -219,14 +202,14 @@ class EditableTable extends React.Component {
         />
         <MissionDetailModal
           isShow={isModalShow}
-          updateModalShow={this.updateModalShow}
+          closeModal={this.closeModal}
+          selectedMissionDetails={selectedMissionDetails}
         />
       </div>
     );
   }
 }
 EditableTable.propTypes = {
-  updateModalShow: PropTypes.func.isRequired,
   dataSource: PropTypes.arrayOf.isRequired,
   count: PropTypes.number.isRequired,
   updateMissionComplated: PropTypes.func.isRequired

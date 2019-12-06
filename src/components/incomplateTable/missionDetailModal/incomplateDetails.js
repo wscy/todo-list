@@ -50,7 +50,7 @@ class EditableCell extends React.Component {
           rules: [
             {
               required: true,
-              message: `${title} is required.`
+              message: `${title} 没有填写.`
             }
           ],
           initialValue: record[dataIndex]
@@ -99,63 +99,60 @@ class EditableCell extends React.Component {
 class DetailTable extends React.Component {
   constructor(props) {
     super(props);
-    const { updateModalShow } = props;
+    const { closeModal, selectedMissionDetails } = props;
+    this.state = {
+      dataSource: selectedMissionDetails,
+      count: selectedMissionDetails.length
+    };
     this.columns = [
       {
         title: "待办事项",
-        dataIndex: "name",
+        dataIndex: "content",
         width: "80%",
         editable: true
       },
       {
-        title: "操作",
         dataIndex: "operation",
         render: (text, record) =>
-          this.state.dataSource.length >= 1 ? (
-            <>
-              &nbsp;&nbsp;&nbsp;&nbsp;
-              <Popconfirm
-                title="确定是已完成?"
-                onConfirm={() => this.handleDelete(record.key)}
-              >
-                <a>已完成</a>
-              </Popconfirm>
-            </>
-          ) : null
+          this.state.dataSource.length >= 1 && !record.isComplated ? (
+            <Popconfirm
+              title="确定是已完成?"
+              onConfirm={() => this.handleDelete(record)}
+            >
+              <a> 未完成</a>
+            </Popconfirm>
+          ) : (
+            "已完成"
+          )
       }
     ];
-
-    this.state = {
-      dataSource: [
-        {
-          key: "0",
-          name: "Edward King 0",
-          age: "32",
-          address: "London, Park Lane no. 0"
-        },
-        {
-          key: "1",
-          name: "Edward King 1",
-          age: "32",
-          address: "London, Park Lane no. 1"
-        }
-      ],
-      count: 2
-    };
   }
 
-  handleDelete = key => {
-    const dataSource = [...this.state.dataSource];
-    this.setState({ dataSource: dataSource.filter(item => item.key !== key) });
+  handleDelete = record => {
+    const { key, isComplated } = record;
+    let { dataSource } = this.state;
+    dataSource = dataSource.map(value => {
+      let result;
+      if (value.key === key) {
+        result = {
+          ...value,
+          isComplated: !isComplated
+        };
+      } else {
+        result = value;
+      }
+      return result;
+    });
+    /* this.setState({ dataSource: dataSource.filter(item => item.key !== key) }); */
+    this.setState({ dataSource });
   };
 
   handleAdd = () => {
     const { count, dataSource } = this.state;
     const newData = {
       key: count,
-      name: `Edward King ${count}`,
-      age: 32,
-      address: `London, Park Lane no. ${count}`
+      content: "",
+      isComplated: false
     };
     this.setState({
       dataSource: [...dataSource, newData],
@@ -175,6 +172,7 @@ class DetailTable extends React.Component {
   };
 
   render() {
+    console.log("------------>", this.state);
     const { dataSource } = this.state;
     const components = {
       body: {
@@ -190,7 +188,8 @@ class DetailTable extends React.Component {
         ...col,
         onCell: record => ({
           record,
-          editable: col.editable,
+          // editable: col.editable,
+          editable: !record.isComplated,
           dataIndex: col.dataIndex,
           title: col.title,
           handleSave: this.handleSave
@@ -219,6 +218,7 @@ class DetailTable extends React.Component {
   }
 }
 DetailTable.propTypes = {
-  updateModalShow: PropTypes.func.isRequired
+  closeModal: PropTypes.func.isRequired,
+  selectedMissionDetails: PropTypes.arrayOf.isRequired
 };
 export default DetailTable;
