@@ -10,13 +10,19 @@ export const Container = styled.div`
     justify-content: space-between;
     background-color: white;
     border-width: 2px;
-    background-color: greenyellow;
+    background-color: #1890ff;;
   }
   .ant-layout-content {
     display: flex;
     flex-direction: column;
   }
+  .ant-layout-sider{
+    background-color: #1890ff;;
+  }
   height: 100%;
+  border:1px solid #1890ff;;
+  box-shadow: 2px 0px 2px #1890ff;;
+
 `;
 export const CurrentTime = styled.div`
   border-width: 2px;
@@ -31,9 +37,13 @@ export const Incomplete = styled.div`
   flex: 4;
 `;
 export const AddMission = styled.div`
-  padding: 0 50px;
+  padding: 5px 50px;
   display: flex;
   justify-content: center;
-  border: 1px solid blue;
-  background-color: green;
+  background-color: #1890ff;;
 `;
+export const Title=styled.div`
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size:30px;
+  padding-top:10px
+`

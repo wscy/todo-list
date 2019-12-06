@@ -3,3 +3,6 @@
     -webkit-transition: all 0.3s, height 0s;
     transition: all 0.3s, height 0s;
 }
+.ant-table-thead > tr > th {
+    background:#1890ff;
+}

@@ -9,14 +9,15 @@ import {
   DataPickerContainer,
   Complated,
   Incomplete,
-  AddMission
+  AddMission,
+  Title
 } from "./style";
 /* import MissionDetailModal from "../../components/missionDetailModal";
  */
 import EditableTable from "../../components/incomplateTable";
 import StaticTable from "../../components/complatedTable";
 
-const { Header, Content } = Layout;
+const { Header, Content,Sider } = Layout;
 const storage=window.localStorage;
 class ToDoList extends Component {
   constructor(props) {
@@ -145,14 +146,16 @@ class ToDoList extends Component {
     let result = <></>;
     if (textValue !== "") {
       result = (
-        <Button shape="circle" type="primary" onClick={this.addNewMission}>
-          <Icon type="plus" />
+        <Button  onClick={this.addNewMission}>
+          <div style={{color:"black"}}>
+          点我添加
+          </div>
         </Button>
       );
     } else {
       result = (
-        <Button shape="circle" type="dashed" disabled>
-          <Icon type="plus" />
+        <Button  disabled>
+         点我添加
         </Button>
       );
     }
@@ -170,16 +173,8 @@ class ToDoList extends Component {
     });
     this.setState({ missionList });
   };
- /*  componentDidUpdate(){
-    let missionList
-    if(storage){
-      missionList=JSON.parse(storage.getItem("missionList"))
-    }
-    this.setState({missionList})
-  } */
 
   render() {
-
     const { isModalShow, textValue, selectedDate } = this.state;
     let{missionList}=this.state
    
@@ -196,12 +191,14 @@ class ToDoList extends Component {
         }
       }
     });
-
-    
-    
-
     return (
       <Container>
+        <Layout>
+        <Sider>
+          <Title>
+          To-Do List
+          </Title>
+          </Sider>
         <Layout>
           <Header>
             <CurrentTime>
@@ -232,13 +229,17 @@ class ToDoList extends Component {
               />
             </Incomplete>
             <AddMission>
-              {this.renderAddButton()}
+              <div style={{fontSize:"20px",color:"black"}}>
+              添加你的任务：
+              </div>
               <div style={{ width: "400px" }}>
+              
                 <Input
                   allowClear
                   onChange={e => this.setState({ textValue: e.target.value })}
                 />
               </div>
+              {this.renderAddButton()}
             </AddMission>
           </Content>
         </Layout>
@@ -246,6 +247,7 @@ class ToDoList extends Component {
           isShow={isModalShow}
           updateModalShow={this.updateModalShow}
         /> */}
+        </Layout>
       </Container>
     );
   }
