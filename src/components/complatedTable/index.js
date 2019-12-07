@@ -14,8 +14,7 @@ class StaticTable extends Component {
       {
         title: "已完成事项",
         dataIndex: "title",
-        width: "80%",
-        render: text => <a>{text}</a>
+        width: "80%"
       },
       {
         //   title: "查看",

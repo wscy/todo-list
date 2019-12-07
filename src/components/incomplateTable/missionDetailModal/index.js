@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import "antd/dist/antd.css";
 import { Layout, Modal } from "antd";
-import {} from "./style";
 import DetailTable from "./incomplateDetails";
 
 const { Header, Content } = Layout;
@@ -21,7 +20,7 @@ const MissionDetailModal = props => {
       visible={isShow}
       onCancel={closeModal}
       onOk={closeModal}
-      title={title}
+      title={`本次任务是：${title}`}
     >
       <DetailTable
         selectedMissionDetails={selectedMissionDetails}

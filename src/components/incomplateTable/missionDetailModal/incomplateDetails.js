@@ -108,7 +108,7 @@ class DetailTable extends React.Component {
     };
     this.columns = [
       {
-        title: "待办事项",
+        title: "任务步骤",
         dataIndex: "content",
         width: "80%",
         editable: true
@@ -221,7 +221,7 @@ class DetailTable extends React.Component {
           type="primary"
           style={{ marginBottom: 16 }}
         >
-          Add a row
+          添加步骤
         </Button>
         <Table
           components={components}

@@ -18,7 +18,7 @@ const MissionDetailModal = props => {
       visible={isShow}
       onCancel={closeModal}
       onOk={closeModal}
-      title={title}
+      title={`本次任务是：${title}`}
     >
       <ComplatedDetails selectedMissionDetails={steps} />
     </Modal>

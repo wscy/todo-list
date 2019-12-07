@@ -100,7 +100,7 @@ class EditableCell extends React.Component {
 class EditableTable extends React.Component {
   constructor(props) {
     super(props);
-    const { count, updateChangedDetailList,updateMissionTitle } = props;
+    const { count, updateChangedDetailList, updateMissionTitle } = props;
     let { dataSource } = props;
     dataSource = dataSource.map(value => ({ ...value, item: value }));
     this.state = {
@@ -111,13 +111,14 @@ class EditableTable extends React.Component {
       updateChangedDetailList,
       updateMissionTitle
     };
-
+    console.log("dataSource----constructor------->", dataSource);
     this.columns = [
       {
         title: "待办事项",
         dataIndex: "title",
         width: "80%",
-        editable: true
+        editable: true,
+        render: text => <a>{text}</a>
       },
       {
         dataIndex: "item",
@@ -130,7 +131,7 @@ class EditableTable extends React.Component {
                 title="确定是已完成?"
                 onConfirm={() => this.handleDelete(record)}
               >
-                <a>完成</a>
+                <a>确认完成</a>
               </Popconfirm>
             </>
           ) : null
@@ -141,6 +142,7 @@ class EditableTable extends React.Component {
   componentWillReceiveProps(nextProps) {
     let { dataSource } = nextProps;
     dataSource = dataSource.map(value => ({ ...value, item: value }));
+    console.log("dataSource--componentWillReceiveProps--->", dataSource);
     this.state.dataSource = dataSource;
   }
 
@@ -171,13 +173,13 @@ class EditableTable extends React.Component {
       ...row
     });
     this.setState({ dataSource: newData });
-    this.state.updateMissionTitle(row)
+    this.state.updateMissionTitle(row);
   };
 
   saveDetailEdit = updatedSteps => {
     let { dataSource, selectedMissionDetails } = this.state;
     delete selectedMissionDetails.item;
-    
+
     selectedMissionDetails = {
       ...selectedMissionDetails,
       steps: updatedSteps
