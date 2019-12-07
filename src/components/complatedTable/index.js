@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import "antd/dist/antd.css";
 import PropTypes from "prop-types";
-import { Table, Divider, Tag } from "antd";
+import { Table } from "antd";
 import "./style.css";
 import MissionDetailModal from "./missionDetailModal";
 

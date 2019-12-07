@@ -1,7 +1,7 @@
-import React, { Component } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import "antd/dist/antd.css";
-import { Table, Divider, Tag } from "antd";
+import { Table } from "antd";
 
 const ComplatedDetails = props => {
   const { selectedMissionDetails } = props;

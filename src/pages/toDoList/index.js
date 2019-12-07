@@ -133,6 +133,7 @@ class ToDoList extends Component {
     };
     missionList.push(newMission);
     this.setState({ missionList });
+    window.location.reload();
   };
 
   renderAddButton = () => {
@@ -166,7 +167,6 @@ class ToDoList extends Component {
     const { selectedDate, missionList } = this.state;
 
     storage.setItem("missionList", JSON.stringify(missionList));
-
     const incompleteMissions = [];
     const completedMissions = [];
     missionList.map(value => {

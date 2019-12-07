@@ -1,10 +1,8 @@
-import React, { Component } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import "antd/dist/antd.css";
-import { Layout, Modal } from "antd";
+import { Modal } from "antd";
 import ComplatedDetails from "./complatedDetails";
-
-const { Header, Content } = Layout;
 
 const MissionDetailModal = props => {
   const {

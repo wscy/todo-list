@@ -1,20 +1,12 @@
-import React, { Component } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import "antd/dist/antd.css";
-import { Layout, Modal } from "antd";
+import { Modal } from "antd";
 import DetailTable from "./incomplateDetails";
 
-const { Header, Content } = Layout;
-
 const MissionDetailModal = props => {
-  const {
-    isShow,
-    closeModal,
-    saveModal,
-    saveDetailEdit,
-    selectedMissionDetails
-  } = props;
-  const { title, steps } = selectedMissionDetails;
+  const { isShow, closeModal, saveDetailEdit, selectedMissionDetails } = props;
+  const { title } = selectedMissionDetails;
   return (
     <Modal
       visible={isShow}

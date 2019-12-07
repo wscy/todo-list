@@ -128,7 +128,7 @@ class DetailTable extends React.Component {
         editable: true
       },
       {
-        dataIndex: "operation",
+        dataIndex: "item",
         render: (text, record) => {
           const { dataSource } = this.state;
           return dataSource.length >= 1 && !record.isComplated ? (

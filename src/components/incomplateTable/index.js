@@ -2,8 +2,8 @@
 import React from "react";
 import "antd/dist/antd.css";
 import "./style.css";
-import { Table, Input, Button, Popconfirm, Form } from "antd";
-import PropTypes, { bool } from "prop-types";
+import { Table, Input, Popconfirm, Form } from "antd";
+import PropTypes from "prop-types";
 import MissionDetailModal from "./missionDetailModal";
 
 const EditableContext = React.createContext();
