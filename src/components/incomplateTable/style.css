@@ -22,3 +22,11 @@
   cursor: pointer;
   text-align: center;
 }
+.ant-table-thead > tr, .ant-table-tbody > tr {
+  text-align: center;
+  -webkit-transition: all 0.3s, height 0s;
+  transition: all 0.3s, height 0s;
+}
+.ant-table-thead > tr > th {
+  background:#1890ff;
+}

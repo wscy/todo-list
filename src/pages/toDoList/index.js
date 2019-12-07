@@ -1,7 +1,6 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
 import "antd/dist/antd.css";
-import { Layout, DatePicker, Table, Input, Button, Icon } from "antd";
+import { Layout, DatePicker, Input, Button } from "antd";
 import moment from "moment";
 import {
   Container,
@@ -12,8 +11,6 @@ import {
   AddMission,
   Title
 } from "./style";
-/* import MissionDetailModal from "../../components/missionDetailModal";
- */
 import EditableTable from "../../components/incomplateTable";
 import StaticTable from "../../components/complatedTable";
 
@@ -23,7 +20,6 @@ class ToDoList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isModalShow: false,
       textValue: "",
       selectedDate: this.renderCurrentTime(),
       missionList:
@@ -98,10 +94,7 @@ class ToDoList extends Component {
   };
 
   updateMissionTitle = newMissionItem => {
-    delete newMissionItem.item;
-
     const { missionList } = this.state;
-
     missionList.map((value, index) => {
       if (value.key === newMissionItem.key) {
         missionList[index] = newMissionItem;
@@ -234,18 +227,10 @@ class ToDoList extends Component {
               </AddMission>
             </Content>
           </Layout>
-          {/*    <MissionDetailModal
-          isShow={isModalShow}
-          updateModalShow={this.updateModalShow}
-        /> */}
         </Layout>
       </Container>
     );
   }
 }
-
-// ToDoList.propTypes = {
-//   history: PropTypes.isRequired
-// };
 
 export default ToDoList;

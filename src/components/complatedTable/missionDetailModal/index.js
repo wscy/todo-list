@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import "antd/dist/antd.css";
 import { Layout, Modal } from "antd";
-import {} from "./style";
 import ComplatedDetails from "./complatedDetails";
 
 const { Header, Content } = Layout;

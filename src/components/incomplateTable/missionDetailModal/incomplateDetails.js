@@ -1,9 +1,9 @@
 // eslint-disable-next-line max-classes-per-file
 import React from "react";
 import "antd/dist/antd.css";
-import "./style.css";
+import "../style.css";
 import { Table, Input, Button, Popconfirm, Form } from "antd";
-import PropTypes, { bool } from "prop-types";
+import PropTypes from "prop-types";
 
 const EditableContext = React.createContext();
 
@@ -12,7 +12,10 @@ const EditableRow = ({ form, index, ...props }) => (
     <tr {...props} />
   </EditableContext.Provider>
 );
-
+EditableRow.propTypes = {
+  form: PropTypes.objectOf.isRequired,
+  index: PropTypes.number.isRequired
+};
 const EditableFormRow = Form.create()(EditableRow);
 
 class EditableCell extends React.Component {
@@ -21,7 +24,8 @@ class EditableCell extends React.Component {
   };
 
   toggleEdit = () => {
-    const editing = !this.state.editing;
+    let { editing } = this.state;
+    editing = !editing;
     this.setState({ editing }, () => {
       if (editing) {
         this.input.focus();
@@ -50,7 +54,7 @@ class EditableCell extends React.Component {
           rules: [
             {
               required: true,
-              message: `${title} 没有填写.`
+              message: `${title} 的此步骤没有填写.`
             }
           ],
           initialValue: record[dataIndex]
@@ -95,11 +99,21 @@ class EditableCell extends React.Component {
     );
   }
 }
+EditableCell.propTypes = {
+  record: PropTypes.objectOf.isRequired,
+  handleSave: PropTypes.func.isRequired,
+  children: PropTypes.objectOf.isRequired,
+  dataIndex: PropTypes.number.isRequired,
+  title: PropTypes.string.isRequired,
+  editable: PropTypes.bool.isRequired,
+  index: PropTypes.number.isRequired,
+  restProps: PropTypes.objectOf.isRequired
+};
 
 class DetailTable extends React.Component {
   constructor(props) {
     super(props);
-    const { closeModal, selectedMissionDetails, saveDetailEdit } = props;
+    const { selectedMissionDetails, saveDetailEdit } = props;
     const { steps } = selectedMissionDetails;
     this.state = {
       dataSource: steps,
@@ -115,8 +129,9 @@ class DetailTable extends React.Component {
       },
       {
         dataIndex: "operation",
-        render: (text, record) =>
-          this.state.dataSource.length >= 1 && !record.isComplated ? (
+        render: (text, record) => {
+          const { dataSource } = this.state;
+          return dataSource.length >= 1 && !record.isComplated ? (
             <Popconfirm
               title="确定是已完成?"
               onConfirm={() => this.handleDelete(record)}
@@ -125,7 +140,8 @@ class DetailTable extends React.Component {
             </Popconfirm>
           ) : (
             "已完成"
-          )
+          );
+        }
       }
     ];
   }
@@ -156,15 +172,14 @@ class DetailTable extends React.Component {
       }
       return result;
     });
-    /* this.setState({ dataSource: dataSource.filter(item => item.key !== key) }); */
     saveDetailEdit(dataSource);
     this.setState({ dataSource });
   };
 
   handleAdd = () => {
-    const { count, dataSource } = this.state;
+    const { count, dataSource, saveDetailEdit } = this.state;
     const newData = {
-      key: count,
+      key: dataSource.length,
       content: "",
       isComplated: false
     };
@@ -172,8 +187,7 @@ class DetailTable extends React.Component {
       dataSource: [...dataSource, newData],
       count: count + 1
     });
-    const { saveDetailEdit } = this.state;
-    saveDetailEdit(this.state.dataSource);
+    saveDetailEdit(dataSource);
   };
 
   handleSave = row => {
@@ -236,7 +250,6 @@ class DetailTable extends React.Component {
   }
 }
 DetailTable.propTypes = {
-  closeModal: PropTypes.func.isRequired,
   saveDetailEdit: PropTypes.func.isRequired,
   selectedMissionDetails: PropTypes.arrayOf.isRequired
 };

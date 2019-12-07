@@ -13,7 +13,10 @@ const EditableRow = ({ form, index, ...props }) => (
     <tr {...props} />
   </EditableContext.Provider>
 );
-
+EditableRow.propTypes = {
+  form: PropTypes.objectOf.isRequired,
+  index: PropTypes.number.isRequired
+};
 const EditableFormRow = Form.create()(EditableRow);
 
 class EditableCell extends React.Component {
@@ -97,19 +100,25 @@ class EditableCell extends React.Component {
   }
 }
 
+EditableCell.propTypes = {
+  record: PropTypes.objectOf.isRequired,
+  handleSave: PropTypes.func.isRequired,
+  children: PropTypes.objectOf.isRequired,
+  dataIndex: PropTypes.number.isRequired,
+  title: PropTypes.string.isRequired,
+  editable: PropTypes.bool.isRequired,
+  index: PropTypes.number.isRequired,
+  restProps: PropTypes.objectOf.isRequired
+};
 class EditableTable extends React.Component {
   constructor(props) {
     super(props);
-    const { count, updateChangedDetailList, updateMissionTitle } = props;
     let { dataSource } = props;
     dataSource = dataSource.map(value => ({ ...value, item: value }));
     this.state = {
       dataSource,
-      count,
       isModalShow: false,
-      selectedMissionDetails: {},
-      updateChangedDetailList,
-      updateMissionTitle
+      selectedMissionDetails: {}
     };
     console.log("dataSource----constructor------->", dataSource);
     this.columns = [
@@ -155,17 +164,19 @@ class EditableTable extends React.Component {
   };
 
   handleDelete = record => {
-    this.props.updateChangedDetailList(record);
-    this.props.updateMissionComplated(record.key);
-
-    const dataSource = [...this.state.dataSource];
+    const { updateChangedDetailList, updateMissionComplated } = this.props;
+    let { dataSource } = this.state;
+    updateChangedDetailList(record);
+    updateMissionComplated(record.key);
+    dataSource = [...dataSource];
     this.setState({
       dataSource: dataSource.filter(item => item.key !== record.key)
     });
   };
 
   handleSave = row => {
-    const newData = [...this.state.dataSource];
+    const { dataSource } = this.state;
+    const newData = [...dataSource];
     const index = newData.findIndex(item => row.key === item.key);
     const item = newData[index];
     newData.splice(index, 1, {
@@ -173,28 +184,21 @@ class EditableTable extends React.Component {
       ...row
     });
     this.setState({ dataSource: newData });
-    this.state.updateMissionTitle(row);
+    delete row.item;
+    const { updateMissionTitle } = this.props;
+    updateMissionTitle(row);
   };
 
   saveDetailEdit = updatedSteps => {
-    let { dataSource, selectedMissionDetails } = this.state;
+    console.log("---saveDetailEdit-------->", updatedSteps);
+    let { selectedMissionDetails } = this.state;
     delete selectedMissionDetails.item;
-
     selectedMissionDetails = {
       ...selectedMissionDetails,
       steps: updatedSteps
     };
-    this.props.updateChangedDetailList(selectedMissionDetails);
-    dataSource = dataSource.map(value => {
-      let result;
-      if (value.key === selectedMissionDetails.key) {
-        result = selectedMissionDetails;
-      } else {
-        result = value;
-      }
-      return result;
-    });
-    this.setState({ dataSource });
+    const { updateChangedDetailList } = this.props;
+    updateChangedDetailList(selectedMissionDetails);
   };
 
   render() {
@@ -242,7 +246,8 @@ class EditableTable extends React.Component {
 }
 EditableTable.propTypes = {
   dataSource: PropTypes.arrayOf.isRequired,
-  count: PropTypes.number.isRequired,
-  updateMissionComplated: PropTypes.func.isRequired
+  updateMissionComplated: PropTypes.func.isRequired,
+  updateChangedDetailList: PropTypes.func.isRequired,
+  updateMissionTitle: PropTypes.func.isRequired
 };
 export default EditableTable;
